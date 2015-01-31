@@ -18,7 +18,8 @@
   },
   "files": [
     "bin",
-    "src"
+    "src",
+    "bower.json"
   ],
   "main": "./src/main.js",
   "dependencies": {},

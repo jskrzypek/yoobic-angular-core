@@ -1,10 +1,26 @@
 {
-  "name": "angularcore",
+  "name": "yoobic-angular-core",
   "version": "0.0.1",
   "scripts": {
-    "test": "gulp test",
-    "postinstall": "node ./bin/protractor-fix-version.js"
+    "test": "gulp unit",
+    "postinstall": "bower install && node ./bin/protractor-fix-version.js"
   },
+  "description": "A core angular module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yoobic/yoobic-angular-core.git"
+  },
+  "author": {
+    "name": "Avi Haiat",
+    "email": "thaiat@ipelia.com",
+    "url": "https://github.com/thaiat"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "main": "./src/main.js",
   "dependencies": {},
   "devDependencies": {
     "brfs": "1.2.0",

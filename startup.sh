@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # constants
-NODE_VERSION="0.10.33";
+NODE_VERSION="0.10.35";
 TRAVIS_VERSION="1.7.4"
 
 clear

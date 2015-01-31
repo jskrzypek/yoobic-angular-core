@@ -1,6 +1,6 @@
 {
   "name": "yoobic-angular-core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "test": "gulp unit",
     "postinstall": "bower install && node ./bin/protractor-fix-version.js"

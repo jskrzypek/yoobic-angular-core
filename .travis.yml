@@ -8,6 +8,8 @@ before_install:
   - bash ./bin/prepublish.sh
 
 before_script:
+  - bower install
+  - node ./bin/protractor-fix-version.js
 
 after_success:
   - CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN codeclimate < ./coverage/**/lcov.info

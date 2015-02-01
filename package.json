@@ -21,7 +21,7 @@
     "src",
     "bower.json"
   ],
-  "main": "./src/main.js",
+  "main": "./src/scripts/core/index.js",
   "dependencies": {},
   "devDependencies": {
     "brfs": "1.2.0",

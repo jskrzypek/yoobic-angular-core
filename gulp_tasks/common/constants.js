@@ -61,9 +61,9 @@ module.exports = function() {
         },
 
         browserify: {
-            src: './' + clientFolder + '/scripts/main{{targetSuffix}}.js',
-            dest: 'scripts',
-            bundleName: 'bundle.js'
+            src: './' + clientFolder + '/scripts/core/index.js',
+            dest: '',
+            bundleName: 'yoobic-angular-core.js'
         },
 
         serve: {
@@ -80,7 +80,7 @@ module.exports = function() {
             timeout: 5000
         },
         dist: {
-            distFolder: './dist/{{targetName}}/{{mode}}'
+            distFolder: './dist'
         }
     };
 

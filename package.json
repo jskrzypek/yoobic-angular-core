@@ -121,7 +121,7 @@
   },
   "browserify-shim": {
     "angular": {
-      "exports": "angular"
+      "exports": "global:angular"
     },
     "angular-mocks": {
       "exports": "angular",

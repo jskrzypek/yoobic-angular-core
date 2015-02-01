@@ -35,6 +35,7 @@ var browserifyShare = function(singleRun, src, dest, bundleName, mode) {
         packageCache: {},
         fullPaths: true
     });
+
     if(singleRun) {
         b = watchify(b);
     }

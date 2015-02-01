@@ -7,14 +7,14 @@ module.exports = function() {
     var clientFolder = 'src'; // the source file folder
     var defaultTarget = 'app'; // the name of the app that corresponds to index.html
     var constants = {
-        appname: 'angular-core',
+        appname: 'yoobic-angular-core',
         cwd: cwd,
         defaultTarget: defaultTarget,
         targetName: '{{targetName}}',
         targetSuffix: '{{targetSuffix}}',
         mode: '{{mode}}',
         clientFolder: clientFolder,
-        repository: 'https://github.com/Yoobic/angular-core',
+        repository: 'https://github.com/Yoobic/yoobic-angular-core',
         versionFiles: ['./package.json', './bower.json', './' + clientFolder + '/config*.xml'],
         growly: {
             notify: false,

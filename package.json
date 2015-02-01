@@ -2,8 +2,7 @@
   "name": "yoobic-angular-core",
   "version": "0.0.4",
   "scripts": {
-    "test": "gulp unit",
-    "postinstall": "bower install && node ./bin/protractor-fix-version.js"
+    "test": "gulp unit"
   },
   "description": "A core angular module",
   "license": "MIT",
@@ -17,11 +16,9 @@
     "url": "https://github.com/thaiat"
   },
   "files": [
-    "bin",
-    "src",
-    "bower.json"
+    "src"
   ],
-  "main": "./src/main.js",
+  "main": "./src/scripts/core/index.js",
   "dependencies": {},
   "devDependencies": {
     "brfs": "1.2.0",

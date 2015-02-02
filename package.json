@@ -19,7 +19,9 @@
     "src"
   ],
   "main": "./src/scripts/core/index.js",
-  "dependencies": {},
+  "dependencies": {
+    "famous-polyfills": "^0.3.0"
+  },
   "devDependencies": {
     "brfs": "1.2.0",
     "browser-sync": "1.7.2",
@@ -107,7 +109,9 @@
     "angular-mocks": "./bower_components/angular-mocks/angular-mocks.js",
     "angular-ui-router": "./bower_components/angular-ui-router/release/angular-ui-router.js",
     "angular-animate": "./bower_components/angular-animate/angular-animate.js",
-    "angular-sanitize": "./bower_components/angular-sanitize/angular-sanitize.js"
+    "angular-sanitize": "./bower_components/angular-sanitize/angular-sanitize.js",
+    "famous": "./bower_components/famous/dist/famous-global.js",
+    "famous-angular": "./bower_components/famous-angular/dist/famous-angular.js"
   },
   "browserify": {
     "transform": [
@@ -132,6 +136,19 @@
     "angular-ui-router": {
       "depends": [
         "angular"
+      ]
+    },
+    "famous": {
+      "exports": "famous"
+    },
+    "famous-angular": {
+      "depends": [
+        "famous-polyfills",
+        "famous",
+        "angular",
+        "angular-animate",
+        "angular-sanitize",
+        "angular-ui-router"
       ]
     }
   }

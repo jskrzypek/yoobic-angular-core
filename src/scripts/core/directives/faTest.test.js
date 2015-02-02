@@ -20,6 +20,7 @@ describe(app.name, function() {
                 this.$compile = $injector.get('$compile');
                 this.$scope = $injector.get('$rootScope').$new();
                 this.$timeout = $injector.get('$timeout');
+
             }));
 
             it('should succeed with html', function() {
@@ -32,7 +33,7 @@ describe(app.name, function() {
                 expect(element.html().trim()).toBeDefined();
                 this.$timeout.flush();
                 setTimeout(function() {
-                    console.log('test is done', element.html());
+                    //this.$log.debug('test is done' + element.html());
                     done();
                 }, 100);
             });

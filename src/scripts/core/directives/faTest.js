@@ -1,5 +1,5 @@
 'use strict';
-/*eslint consistent-this:[2,  "faTest"] */
+/*eslint consistent-this:[2,  "faTestCtrl"] */
 var directivename = 'faTest';
 
 module.exports = function(app) {
@@ -8,6 +8,7 @@ module.exports = function(app) {
     var controllerDeps = [];
     var controller = function() {
         var faTestCtrl = this;
+        faTestCtrl.name = directivename;
     };
     controller.$inject = controllerDeps;
 
@@ -23,7 +24,7 @@ module.exports = function(app) {
             template: require('./faTest.html'),
             link: function(scope, element, attrs) {
                 $timeout(function() {
-                    console.log($famous.find('fa-surface'));
+                    //console.log($famous.find('fa-surface'));
                 }, 0);
 
             }

@@ -3,10 +3,8 @@
 var fullname = 'yoobic.angular.core';
 
 var angular = require('angular');
-require('famous-angular');
-var app = angular.module(fullname, ['famous.angular']);
+var app = angular.module(fullname, []);
 // inject:folders start
-require('./directives')(app);
 require('./services')(app);
 // inject:folders end
 

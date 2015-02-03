@@ -32,7 +32,6 @@ module.exports = function(app) {
             link: function(scope, element, attrs, sampleDirectiveCtrl) {
 
                 directiveBinder['@'](scope, attrs, sampleDirectiveCtrl, 'title');
-                directiveBinder['@'](scope, attrs, sampleDirectiveCtrl, 'stylemovie');
                 directiveBinder['='](scope, attrs, sampleDirectiveCtrl, 'message');
                 directiveBinder['&'](scope, attrs, sampleDirectiveCtrl, 'action');
 

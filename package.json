@@ -104,6 +104,7 @@
     "node": ">=0.10.0"
   },
   "browser": {
+    "unit": "./test/unit",
     "unitHelper": "./test/unit/unitHelper.js",
     "angular": "./bower_components/angular/angular.js",
     "angular-mocks": "./bower_components/angular-mocks/angular-mocks.js",

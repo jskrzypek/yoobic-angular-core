@@ -18,6 +18,8 @@ module.exports = function(app) {
     };
     controller.$inject = controllerDeps;
 
+    /*eslint-disable consistent-this */
+
     // directive
     var directiveDeps = [app.name + '.directiveBinder'];
     var directive = function(directiveBinder) {

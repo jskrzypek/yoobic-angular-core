@@ -8,12 +8,13 @@ module.exports = function(app) {
     function service($parse) {
         var binder = {
             '@': function(scope, attrs, ctrl, name) {
+                ctrl[name] = scope.$parent.$eval(attrs[name]);
                 attrs.$observe(name, function(value) {
                     ctrl[name] = value;
                 });
             },
             '=': function(scope, attrs, ctrl, name) {
-                //ctrl[name] = scope.$parent.$eval(attrs[name]);
+                ctrl[name] = scope.$parent.$eval(attrs[name]);
                 scope.$watch(attrs[name], function(value) {
                     ctrl[name] = value;
                 });

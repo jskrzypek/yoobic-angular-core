@@ -3,15 +3,26 @@ var servicename = 'directiveBinder';
 
 module.exports = function(app) {
 
-    var dependencies = ['$parse'];
+    var dependencies = ['$parse', '$interpolate'];
 
-    function service($parse) {
+    function service($parse, $interpolate) {
         var binder = {
             '@': function(scope, attrs, ctrl, name) {
-                ctrl[name] = scope.$parent.$eval(attrs[name]);
+                //ctrl[name] = scope.$parent.$eval(attrs[name]);
+                //attrs.$observe(name, function(value) {
+                //   ctrl[name] = value;
+                //});
+
                 attrs.$observe(name, function(value) {
                     ctrl[name] = value;
                 });
+                attrs.$$observers[name].$$scope = scope;
+                if(attrs[name]) {
+                    // If the attribute has been provided then we trigger an interpolation to ensure
+                    // the value is there for use in the link fn
+                    ctrl[name] = $interpolate(attrs[name])(scope);
+                }
+
             },
             '=': function(scope, attrs, ctrl, name) {
                 ctrl[name] = scope.$parent.$eval(attrs[name]);

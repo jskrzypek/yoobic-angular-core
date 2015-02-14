@@ -20,7 +20,7 @@ npm install --save yoobic-angular-core
 
 Then in your project add the following dependency to 'yoobic-angular-core'
 ```js
-var yoobicCore = require('yoobic-angular-core');
+var yoobicCore = require('yoobic-angular-core')();
 var angular = require('angular');
 var app = angular.module('app', [yoobicCore.name]);
 ```

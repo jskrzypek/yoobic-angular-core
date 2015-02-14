@@ -1,5 +1,34 @@
 'use strict';
 
+var args = require('yargs').argv;
+
+var debug = false;
+try {
+    debug = JSON.parse(args._[0]).debug;
+} catch(err) {}
+debug = debug || args.debug;
+
+var autowatch = true;
+try {
+    autowatch = JSON.parse(args._[0]).autowatch;
+} catch(err) {}
+autowatch = autowatch || args.autowatch;
+
+var reporters = ['mocha', 'coverage'];
+var browserify = {
+    debug: true,
+    transform: [
+        [{
+            ignore: ['**/*.test.js', '**/*.html', '**/bower_components/**', '**/node_modules/**']
+        }, 'browserify-istanbul']
+    ]
+};
+
+if(args.debug === true) {
+    delete browserify.transform;
+    reporters.splice(reporters.indexOf('coverage'), 1);
+}
+
 module.exports = function(config) {
     config.set({
         browserNoActivityTimeout: 60000,
@@ -33,7 +62,7 @@ module.exports = function(config) {
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         //  reporters: ['dots', 'coverage'],
-        reporters: ['mocha', 'coverage'],
+        reporters: reporters,
 
         // web server port
         port: 9876,
@@ -46,7 +75,7 @@ module.exports = function(config) {
         logLevel: config.LOG_ERROR,
 
         // enable / disable watching file and executing tests whenever any file changes
-        autoWatch: true,
+        autoWatch: autowatch,
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
@@ -70,13 +99,6 @@ module.exports = function(config) {
             }]
         },
 
-        browserify: {
-            debug: true,
-            transform: [
-                [{
-                    ignore: ['**/*.test.js', '**/*.html', '**/bower_components/**', '**/node_modules/**']
-                }, 'browserify-istanbul']
-            ]
-        }
+        browserify: browserify
     });
 };

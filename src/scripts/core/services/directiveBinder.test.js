@@ -35,85 +35,127 @@ describe(app.name, function() {
                 expect(this.service).toBeDefined();
             });
 
-            it('should work with one-way binding', function() {
-                var vm = {
-                    title: 'toto',
-                    message: 'message',
-                    action: angular.noop()
-                };
-                this.$scope.vm = vm;
-                unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive>');
-                var sampleDirectiveCtrl = this.controller;
-                expect(sampleDirectiveCtrl.title).toBe(vm.title);
-                vm.title = 'new title';
-                this.$scope.$digest();
-                expect(sampleDirectiveCtrl.title).toBe(vm.title);
+            describe('one-way binding', function() {
 
-                sampleDirectiveCtrl.title = 'another title';
-                this.$scope.$digest();
-                expect(vm.title).toBe('new title');
+                it('should succeed', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: angular.noop()
+                    };
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive>');
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.title).toBe(vm.title);
+                    vm.title = 'new title';
+                    this.$scope.$digest();
+                    expect(sampleDirectiveCtrl.title).toBe(vm.title);
+
+                    sampleDirectiveCtrl.title = 'another title';
+                    this.$scope.$digest();
+                    expect(vm.title).toBe('new title');
+                });
+                it('should success when the attribute is not provided', function() {
+                    var vm = {
+                        title: null,
+                        message: 'message',
+                        action: angular.noop()
+                    };
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, directivename, '<sample-directive  message="vm.message" action="vm.action()"></sample-directive>');
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.title).toBeUndefined();
+
+                });
+
+                it('should success when the attribute is an expression', function() {
+                    var vm = {
+                        title: 100,
+                        message: 'message',
+                        action: angular.noop()
+                    };
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title + 100}}" message="vm.message" action="vm.action()"></sample-directive>');
+                    var sampleDirectiveCtrl = this.controller;
+                    // title -0 is just making sure that we return a number
+                    expect(sampleDirectiveCtrl.title - 0).toBe(vm.title + 100);
+                });
             });
 
-            it('should work with one-way binding when the attribute is not provided', function() {
-                var vm = {
-                    title: null,
-                    message: 'message',
-                    action: angular.noop()
-                };
-                this.$scope.vm = vm;
-                unitHelper.compileDirective.call(this, directivename, '<sample-directive  message="vm.message" action="vm.action()"></sample-directive>');
-                var sampleDirectiveCtrl = this.controller;
-                expect(sampleDirectiveCtrl.title).toBeUndefined();
+            describe('two-way binding', function() {
+
+                it('should succeed', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: angular.noop()
+                    };
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive>');
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.message).toBe(vm.message);
+                    vm.message = 'new message';
+                    this.$scope.$digest();
+                    expect(sampleDirectiveCtrl.message).toBe(vm.message);
+                    sampleDirectiveCtrl.message = 'another new message';
+                    this.$scope.$digest();
+                    expect(sampleDirectiveCtrl.message).toBe(vm.message);
+                });
+
+                it('should succeed when undefined and assigning a new value in the inner scope', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: angular.noop()
+                    };
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title}}" action="vm.action()"></sample-directive>');
+                    var sampleDirectiveCtrl = this.controller;
+
+                    expect(sampleDirectiveCtrl.message).toBeUndefined();
+
+                    expect(function() {
+                        sampleDirectiveCtrl.message = 'another new message';
+                        this.$scope.$digest();
+                    }.bind(this)).toThrowError();
+
+                });
+
+                it('should delete watcher when destroying scope', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: angular.noop()
+                    };
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive>');
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.message).toBe(vm.message);
+                    var watchersCount = this.scope.$$watchers.length;
+                    this.scope.$emit('$destroy');
+                    expect(this.scope.$$watchers.length).toBe(watchersCount - 1);
+                });
 
             });
 
-            it('should work with one-way binding when the attribute is an expression', function() {
-                var vm = {
-                    title: 100,
-                    message: 'message',
-                    action: angular.noop()
-                };
-                this.$scope.vm = vm;
-                unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title + 100}}" message="vm.message" action="vm.action()"></sample-directive>');
-                var sampleDirectiveCtrl = this.controller;
-                // title -0 is just making sure that we return a number
-                expect(sampleDirectiveCtrl.title - 0).toBe(vm.title + 100);
-            });
+            describe('expression-binding', function() {
+                it('should succeed', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: jasmine.createSpy()
+                    };
 
-            it('should work with two-way binding', function() {
-                var vm = {
-                    title: 'toto',
-                    message: 'message',
-                    action: angular.noop()
-                };
-                this.$scope.vm = vm;
-                unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive>');
-                var sampleDirectiveCtrl = this.controller;
-                expect(sampleDirectiveCtrl.message).toBe(vm.message);
-                vm.message = 'new message';
-                this.$scope.$digest();
-                expect(sampleDirectiveCtrl.message).toBe(vm.message);
-                sampleDirectiveCtrl.message = 'another new message';
-                this.$scope.$digest();
-                expect(sampleDirectiveCtrl.message).toBe(vm.message);
-            });
+                    this.$scope.vm = vm;
+                    var element = unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive>');
+                    var button = element.find('button');
+                    button[0].click();
 
-            it('should work with function binding', function() {
-                var vm = {
-                    title: 'toto',
-                    message: 'message',
-                    action: jasmine.createSpy()
-                };
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.message).toBe(vm.message);
+                    expect(sampleDirectiveCtrl.message).toBe('messagex');
 
-                this.$scope.vm = vm;
-                var element = unitHelper.compileDirective.call(this, directivename, '<sample-directive title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive>');
-                var button = element.find('button');
-                button[0].click();
-
-                var sampleDirectiveCtrl = this.controller;
-                expect(sampleDirectiveCtrl.message).toBe(vm.message);
-                expect(sampleDirectiveCtrl.message).toBe('messagex');
-
+                });
             });
 
         });

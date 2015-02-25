@@ -158,6 +158,50 @@ describe(app.name, function() {
                 });
             });
 
+            describe('toPrimitive', function() {
+                it('should transform to boolean', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: jasmine.createSpy()
+                    };
+
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" flag="true" action="vm.action()"></sample-directive-isolated>');
+
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.flag).toBe(true);
+
+                });
+
+                it('should default to defaultValue', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: jasmine.createSpy()
+                    };
+
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive-isolated>');
+
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.flag).toBe(true);
+
+                });
+
+                it('should check type', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: jasmine.createSpy()
+                    };
+                    this.$scope.vm = vm;
+                    expect(function() {
+                        unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" flag="toto" action="vm.action()"></sample-directive-isolated>');
+                    }.bind(this)).toThrowError();
+                });
+            });
+
         });
     });
 });

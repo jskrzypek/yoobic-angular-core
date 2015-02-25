@@ -91,6 +91,16 @@ module.exports = function(app) {
                 ctrl[name] = function(locals) {
                     return parentGet(scope, locals);
                 };
+            },
+
+            toPrimitive: function(scope, attrs, ctrl, name, defaultValue, typename) {
+                ctrl[name] = scope.$eval(attrs[name]) || defaultValue;
+                attrs.$observe(name, function() {
+                    ctrl[name] = scope.$eval(attrs[name]);
+                    if(typename && typeof ctrl[name] !== typename) {
+                        throw new Error('Attribute "' + name + '" should be of type "' + typename + '"');
+                    }
+                });
             }
         };
 

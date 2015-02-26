@@ -7,12 +7,14 @@ module.exports = function(app) {
 
     function service($parse, $interpolate) {
         var binder = {
+            /**
+             * Performs a one way binding
+             * @param  {Object} scope - The scope of the directive
+             * @param  {Object} attrs - The attributes object of the directive pre or post link function
+             * @param  {Object} ctrl - The controller of the directive
+             * @param  {String} name  - The name of the binded property
+             */
             '@': function(scope, attrs, ctrl, name) {
-                //ctrl[name] = scope.$parent.$eval(attrs[name]);
-                //attrs.$observe(name, function(value) {
-                //   ctrl[name] = value;
-                //});
-
                 attrs.$observe(name, function(value) {
                     ctrl[name] = value;
                 });
@@ -24,21 +26,15 @@ module.exports = function(app) {
                 }
 
             },
-            '=': function(scope, attrs, ctrl, name) {
-                // ctrl[name] = scope.$parent.$eval(attrs[name]);
-                // scope.$watch(attrs[name], function(value) {
-                //     ctrl[name] = value;
-                // });
-                // scope.$watch(function() {
-                //     return ctrl[name];
-                // }, function(value) {
-                //     var prop = $parse(attrs[name]);
-                //     //console.log('prop', prop);
-                //     //if(prop && prop.assign) {
-                //     prop.assign(scope, value);
-                //     //}
-                // });
 
+            /**
+             * Performs a two way binding
+             * @param  {Object} scope - The scope of the directive
+             * @param  {Object} attrs - The attributes object of the directive pre or post link function
+             * @param  {Object} ctrl - The controller of the directive
+             * @param  {String} name  - The name of the binded property
+             */
+            '=': function(scope, attrs, ctrl, name) {
                 var compare;
                 var parentGet;
                 var parentSet;
@@ -85,12 +81,39 @@ module.exports = function(app) {
                 });
 
             },
+
+            /**
+             * Performs a "&" binding (function)
+             * @param  {Object} scope - The scope of the directive
+             * @param  {Object} attrs - The attributes object of the directive pre or post link function
+             * @param  {Object} ctrl - The controller of the directive
+             * @param  {String} name  - The name of the binded property
+             */
             '&': function(scope, attrs, ctrl, name) {
                 var parentGet;
                 parentGet = $parse(attrs[name]);
                 ctrl[name] = function(locals) {
                     return parentGet(scope, locals);
                 };
+            },
+
+            /**
+             * Transform a one way bind to a primitive type (boolean, double, etc...) instead of simple string
+             * @param  {Object} scope - The scope of the directive
+             * @param  {Object} attrs - The attributes object of the directive pre or post link function
+             * @param  {Object} ctrl - The controller of the directive
+             * @param  {String} name - The name of the one way binded property
+             * @param  {Object} [defaultValue] - The default value of the one way binded property
+             * @param  {String} [typename] - The type name of the property
+             */
+            toPrimitive: function(scope, attrs, ctrl, name, defaultValue, typename) {
+                ctrl[name] = scope.$eval(attrs[name]) || defaultValue;
+                attrs.$observe(name, function() {
+                    ctrl[name] = scope.$eval(attrs[name]);
+                    if(typename && typeof ctrl[name] !== typename) {
+                        throw new Error('Attribute "' + name + '" should be of type "' + typename + '"');
+                    }
+                });
             }
         };
 

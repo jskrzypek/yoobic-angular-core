@@ -29,14 +29,15 @@ module.exports = function(app) {
             scope: {
                 title: '@',
                 message: '=',
-                action: '&'
+                action: '&',
+                flag: '@'
             },
             controller: controller,
             controllerAs: 'sampleDirectiveIsolatedCtrl',
             bindToController: true,
             template: require('./sampleDirective.html'),
             link: function(scope, element, attrs, ctrl) {
-
+                directiveBinder.toPrimitive(scope, attrs, ctrl, 'flag', true, 'boolean');
             }
 
         };

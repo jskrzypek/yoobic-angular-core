@@ -167,14 +167,14 @@ describe(app.name, function() {
                     };
 
                     this.$scope.vm = vm;
-                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" flag="true" action="vm.action()"></sample-directive-isolated>');
+                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" flag="false" action="vm.action()"></sample-directive-isolated>');
 
                     var sampleDirectiveCtrl = this.controller;
-                    expect(sampleDirectiveCtrl.flag).toBe(true);
+                    expect(sampleDirectiveCtrl.flag).toBe(false);
 
                 });
 
-                it('should default to defaultValue', function() {
+                it('should transform to number', function() {
                     var vm = {
                         title: 'toto',
                         message: 'message',
@@ -182,10 +182,64 @@ describe(app.name, function() {
                     };
 
                     this.$scope.vm = vm;
-                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive-isolated>');
+                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" tag="33" action="vm.action()"></sample-directive-isolated>');
 
                     var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.tag).toBe(33);
+                });
+
+                it('should default to defaultValue when not passed a value', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: jasmine.createSpy()
+                    };
+
+                    this.$scope.vm = vm;
+                    vm.flag = true;
+                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" action="vm.action()"></sample-directive-isolated>');
+                    var sampleDirectiveCtrl = this.controller;
                     expect(sampleDirectiveCtrl.flag).toBe(true);
+                });
+
+                it('should default to defaultValue when passed undefined', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: jasmine.createSpy()
+                    };
+
+                    this.$scope.vm = vm;
+                    vm.flag = true;
+                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" flag="{{vm.flag}}" action="vm.action()"></sample-directive-isolated>');
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.flag).toBe(true);
+
+                    vm.flag = false;
+                    this.$scope.$digest();
+                    expect(sampleDirectiveCtrl.flag).toBe(false);
+
+                    delete vm.flag;
+                    this.$scope.$digest();
+                    expect(sampleDirectiveCtrl.flag).toBe(true);
+                });
+
+                it('should not default to defaultValue when passed valid falsy values', function() {
+                    var vm = {
+                        title: 'toto',
+                        message: 'message',
+                        action: jasmine.createSpy(),
+                        flag: false,
+                        tag: 0
+                    };
+
+                    this.$scope.vm = vm;
+                    unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" flag="{{vm.flag}}" tag="{{vm.tag}}" action="vm.action()"></sample-directive-isolated>', false);
+
+                    this.$scope.$digest();
+                    var sampleDirectiveCtrl = this.controller;
+                    expect(sampleDirectiveCtrl.flag).toBe(false);
+                    expect(sampleDirectiveCtrl.tag).toBe(0);
 
                 });
 
@@ -197,7 +251,10 @@ describe(app.name, function() {
                     };
                     this.$scope.vm = vm;
                     expect(function() {
-                        unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" flag="toto" action="vm.action()"></sample-directive-isolated>');
+                        unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" tag="toto" action="vm.action()"></sample-directive-isolated>');
+                    }.bind(this)).toThrowError();
+                    expect(function() {
+                        unitHelper.compileDirective.call(this, 'sampleDirectiveIsolated', '<sample-directive-isolated title="{{vm.title}}" message="vm.message" flag="33" action="vm.action()"></sample-directive-isolated>');
                     }.bind(this)).toThrowError();
                 });
             });

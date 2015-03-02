@@ -107,12 +107,24 @@ module.exports = function(app) {
              * @param  {String} [typename] - The type name of the property
              */
             toPrimitive: function(scope, attrs, ctrl, name, defaultValue, typename) {
-                ctrl[name] = scope.$eval(attrs[name]) || defaultValue;
-                attrs.$observe(name, function() {
-                    ctrl[name] = scope.$eval(attrs[name]);
-                    if(typename && typeof ctrl[name] !== typename) {
+                var setAttr = function() {
+                    var evalAttr = scope.$eval(attrs[name]);
+                    if(evalAttr === undefined) {
+                        if(attrs[name] !== '' && attrs[name] !== undefined) {
+                            throw new Error('Attribute "' + name + '" is an invalid string, should be of type "' + typename + '"');
+                        } else {
+                            ctrl[name] = defaultValue;
+                        }
+                    } else if(typename && typeof evalAttr !== typename) {
                         throw new Error('Attribute "' + name + '" should be of type "' + typename + '"');
+                    } else {
+                        ctrl[name] = evalAttr;
                     }
+                };
+
+                setAttr();
+                attrs.$observe(name, function() {
+                    setAttr();
                 });
             }
         };

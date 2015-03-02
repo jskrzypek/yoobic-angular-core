@@ -30,7 +30,8 @@ module.exports = function(app) {
                 title: '@',
                 message: '=',
                 action: '&',
-                flag: '@'
+                flag: '@',
+                tag: '@'
             },
             controller: controller,
             controllerAs: 'sampleDirectiveIsolatedCtrl',
@@ -38,6 +39,7 @@ module.exports = function(app) {
             template: require('./sampleDirective.html'),
             link: function(scope, element, attrs, ctrl) {
                 directiveBinder.toPrimitive(scope, attrs, ctrl, 'flag', true, 'boolean');
+                directiveBinder.toPrimitive(scope, attrs, ctrl, 'tag', 1, 'number');
             }
 
         };
